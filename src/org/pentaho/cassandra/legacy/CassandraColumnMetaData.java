@@ -22,19 +22,6 @@
 
 package org.pentaho.cassandra.legacy;
 
-import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
 import org.apache.cassandra.db.marshal.AbstractType;
 import org.apache.cassandra.db.marshal.AsciiType;
 import org.apache.cassandra.db.marshal.BooleanType;
@@ -75,6 +62,19 @@ import org.pentaho.di.core.row.ValueMeta;
 import org.pentaho.di.core.row.ValueMetaInterface;
 import org.pentaho.di.core.row.value.ValueMetaBase;
 import org.pentaho.di.i18n.BaseMessages;
+
+import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Class encapsulating read-only schema information for a column family. Has utility routines for converting between
@@ -272,10 +272,7 @@ public class CassandraColumnMetaData implements ColumnFamilyMetaData {
         + CFMetaDataElements.COMPACTION_STRATEGY_OPTIONS + ", " + CFMetaDataElements.COMPRESSION_PARAMETERS + ", " //$NON-NLS-1$ //$NON-NLS-2$
         + CFMetaDataElements.GC_GRACE_SECONDS + ", " + CFMetaDataElements.LOCAL_READ_REPAIR_CHANCE + ", " //$NON-NLS-1$ //$NON-NLS-2$
         + CFMetaDataElements.MAX_COMPACTION_THRESHOLD + ", " + CFMetaDataElements.MIN_COMPACTION_THRESHOLD + ", " //$NON-NLS-1$ //$NON-NLS-2$
-        + CFMetaDataElements.POPULATE_IO_CACHE_ON_FLUSH + ", "
-        + CFMetaDataElements.READ_REPAIR_CHANCE // + ", " //$NON-NLS-1$ //$NON-NLS-2$
-        + CFMetaDataElements.REPLICATE_ON_WRITE + ", " + CFMetaDataElements.TYPE + ", " //$NON-NLS-1$ //$NON-NLS-2$
-        + CFMetaDataElements.VALUE_ALIAS
+        + CFMetaDataElements.TYPE + ", " + CFMetaDataElements.VALUE_ALIAS //$NON-NLS-1$ //$NON-NLS-2$
         + " from system.schema_columnfamilies where keyspace_name='" //$NON-NLS-1$
         + conn.m_keyspaceName + "' and columnfamily_name='" + m_columnFamilyName + "';"; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -680,21 +677,6 @@ public class CassandraColumnMetaData implements ColumnFamilyMetaData {
       m_schemaDescription.append( "\n\tRead repair chance: " + readV.toString() ); //$NON-NLS-1$
     }
 
-    // replicate on write
-    Column repWrite = cols.get( CFMetaDataElements.REPLICATE_ON_WRITE.ordinal() );
-    axDeserializer = BooleanType.instance;
-    if ( repWrite != null && repWrite.bufferForValue() != null ) {
-      Object repV = axDeserializer.compose( repWrite.bufferForValue() );
-      m_schemaDescription.append( "\n\tReplicate on write: " + repV.toString() ); //$NON-NLS-1$
-    }
-
-    // type?
-    Column type = cols.get( CFMetaDataElements.TYPE.ordinal() );
-    if ( type != null && type.bufferForValue() != null ) {
-      Object typeV = deserializer.compose( type.bufferForValue() );
-      m_schemaDescription.append( "\n\tType: " + typeV.toString() ); //$NON-NLS-1$
-    }
-
     m_schemaDescription.append( "\n\n\tColumn metadata:" ); //$NON-NLS-1$
 
     // additional columns
@@ -942,7 +924,6 @@ public class CassandraColumnMetaData implements ColumnFamilyMetaData {
   /**
    * Get a textual description of the named column family
    *
-   * @param keyspace
    * @return
    * @throws Exception
    */

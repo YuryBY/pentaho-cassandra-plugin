@@ -21,9 +21,6 @@
  ******************************************************************************/
 package org.pentaho.di.trans.steps.cassandrasstableoutput;
 
-import java.util.List;
-import java.util.Map;
-
 import org.pentaho.di.core.CheckResult;
 import org.pentaho.di.core.CheckResultInterface;
 import org.pentaho.di.core.Counter;
@@ -48,6 +45,9 @@ import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
 import org.w3c.dom.Node;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Provides metadata for the Cassandra SSTable output step.
  */
@@ -55,7 +55,7 @@ import org.w3c.dom.Node;
     documentationUrl = "Products/Data_Integration/Transformation_Step_Reference/SSTable_Output",
     description = "Writes to a filesystem directory as a Cassandra SSTable", categoryDescription = "Big Data" )
 @InjectionSupported( localizationPrefix = "SSTableOutput.Injection." )
-@ParentFirst( patterns = { ".*" } )
+@ParentFirst( patterns = { "java.*" } )
 public class SSTableOutputMeta extends BaseStepMeta implements StepMetaInterface {
 
   protected static final Class<?> PKG = SSTableOutputMeta.class;
